@@ -693,6 +693,11 @@ require('lazy').setup({
           },
         },
       }
+      ---@type MasonLspconfigSettings
+      ---@diagnostic disable-next-line: missing-fields
+      require('mason-lspconfig').setup {
+        automatic_enable = vim.tbl_keys(servers or {}),
+      }
 
       -- Ensure the servers and tools above are installed
       --
