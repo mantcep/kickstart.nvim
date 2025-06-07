@@ -55,14 +55,14 @@ return {
       desc = 'Debug: Step Out',
     },
     {
-      '<leader>b',
+      '<leader>db',
       function()
         require('dap').toggle_breakpoint()
       end,
       desc = 'Debug: Toggle Breakpoint',
     },
     {
-      '<leader>B',
+      '<leader>dB',
       function()
         require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
       end,
@@ -143,8 +143,18 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install Python specific config
+    -- Python specific config
     require('dap-python').setup 'python3'
     require('dap-python').test_runner = 'pytest'
+
+    vim.keymap.set('x', '<leader>ds', function()
+      local start = vim.fn.getpos "'<"
+      local finish = vim.fn.getpos "'>"
+      local vmode = vim.fn.visualmode()
+
+      local text = vim.fn.getregion(start, finish, { mode = vmode, inclusive = true })
+
+      require('dap').repl.execute(table.concat(text, '\n'))
+    end, { noremap = true, silent = true, desc = 'Debug: Send selection to REPL' })
   end,
 }
